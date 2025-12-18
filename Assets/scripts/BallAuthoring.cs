@@ -1,16 +1,24 @@
+using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class BallAuthoring : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public float Speed;
+    public float3 Direction;
+}
 
-    // Update is called once per frame
-    void Update()
+public class BallBaker : Baker<BallAuthoring>
+{
+    public override void Bake(BallAuthoring authoring)
     {
-        
+        Entity entity = GetEntity(TransformUsageFlags.Dynamic);
+
+        AddComponent(entity, new BallData
+        {
+            Speed = authoring.Speed,
+            Direction = authoring.Direction
+
+        });
     }
 }
