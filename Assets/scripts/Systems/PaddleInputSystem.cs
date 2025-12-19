@@ -4,10 +4,11 @@ using UnityEngine.InputSystem;
 public partial class PaddleInputSystem : SystemBase
 {
     private InputAction moveAction;
+    InputSystem_Actions input;
 
     protected override void OnCreate()
     {
-        var input = new InputSystem_Actions();
+         input = new InputSystem_Actions();
         moveAction = input.gameplay.Move;
         moveAction.Enable();
 
@@ -16,8 +17,9 @@ public partial class PaddleInputSystem : SystemBase
 
     protected override void OnDestroy()
     {
-       
+      
         moveAction.Disable();
+        input.Disable();
         base.OnDestroy();
     }
 
