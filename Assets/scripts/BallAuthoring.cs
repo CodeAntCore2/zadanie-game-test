@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BallAuthoring : MonoBehaviour
 {
-    public float Speed;
-    public float3 Direction;
+   
 }
 
 public class BallBaker : Baker<BallAuthoring>
@@ -16,8 +15,7 @@ public class BallBaker : Baker<BallAuthoring>
 
         AddComponent(entity, new BallData
         {
-            Speed = authoring.Speed,
-            Direction = authoring.Direction
+        
 
         });
     }

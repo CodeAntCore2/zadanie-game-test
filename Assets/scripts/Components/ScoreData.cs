@@ -7,5 +7,4 @@ public struct GameData : IComponentData
     public int Score;
     public int lives;
 
-    
 }

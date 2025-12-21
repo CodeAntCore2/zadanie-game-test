@@ -9,47 +9,39 @@ using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public partial struct BallOutOfBoundsSystem: ISystem
 {
-    public void OnUpdate(ref SystemState state)
-    {
+   
 
+
+public void OnUpdate(ref SystemState state)
+    {
+      
+        var gameData = SystemAPI.GetSingleton<GameData>();
+       
+        
         var rng = new Unity.Mathematics.Random(
-           (uint)SystemAPI.Time.ElapsedTime.GetHashCode() + 1);
+            (uint)(SystemAPI.Time.ElapsedTime * 1000 + 1));
 
-
-        var job = new BallOutoFBoundsJob
+        foreach (var (transform, velocity)
+                 in SystemAPI.Query<RefRW<LocalTransform>, RefRW<PhysicsVelocity>>())
         {
-            Rng = rng
-        };
-
-        state.Dependency = job.ScheduleParallel(state.Dependency);
-    }
-
-    public partial struct BallOutoFBoundsJob : IJobEntity
-    {
-
-        public Unity.Mathematics.Random Rng;
-        void Execute(ref LocalTransform transform, in BallData Ball , ref PhysicsVelocity velocity )
-        {
-           
-
-            if(transform.Position.y<-8)
+            if (transform.ValueRO.Position.y < -8f)
             {
-                // change ball postiton
-                transform.Position.x = 0;
-                transform.Position.y = -4;
 
-                // change ball speed
+                velocity.ValueRW.Linear = new float3(
+                    rng.NextFloat(-10, 10), 5, 0);
+              
 
-                float x = Rng.NextFloat(-10f, 10f);
+                // Reset ball position
+                transform.ValueRW.Position = new float3(0, -4, 9);
 
 
 
-                velocity.Linear = new float3(x,5,0);
+                gameData.lives--;
+                SystemAPI.SetSingleton(gameData);
+
             }
-
-         
         }
+
+       
     }
-
 }
-
